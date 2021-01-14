@@ -3,7 +3,6 @@
  * Register custom GraphQL handlers
  */
 add_action('graphql_register_types', function () {
-
     /**
      * Pages
      */
