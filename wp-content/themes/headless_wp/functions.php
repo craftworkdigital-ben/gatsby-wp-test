@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * Custom post types
+ */
 require get_template_directory() . '/inc/post-types.php';
 require get_template_directory() . '/inc/image-sizes.php';
 require get_template_directory() . '/inc/admin.php';
@@ -9,26 +11,21 @@ require get_template_directory() . '/inc/graphql.php';
  * Custom theme setup
  */
 add_action('after_setup_theme', function () {
-    
-    // Enable post thumbnails
     add_theme_support('post-thumbnails');
-    
-    // Nav Menus
-    register_nav_menu('header_menu', 'Header Menu');
-    register_nav_menu('footer_menu', 'Footer Menu');
-    register_nav_menu('sitemap', 'Sitemap');
+
+    // register_nav_menu('header_menu', 'Header Menu');
 });
 
 /**
  * Complete remove comments from site
  */
 add_action('admin_init', function () {
-    $post_types = get_post_types();
+    $postTypes = get_post_types();
 
-    foreach ($post_types as $post_type) {
-        if (post_type_supports($post_type, 'comments')) {
-            remove_post_type_support($post_type,'comments');
-            remove_post_type_support($post_type,'trackbacks');
+    foreach ($postTypes as $postType) {
+        if (post_type_supports($postType, 'comments')) {
+            remove_post_type_support($postType,'comments');
+            remove_post_type_support($postType,'trackbacks');
         }
     }
 });
@@ -50,22 +47,22 @@ add_action('admin_enqueue_scripts', function () {
 /**
  * Custom rewrite for news posts
  */
-add_action('generate_rewrite_rules', function ($wp_rewrite) {
+add_action('generate_rewrite_rules', function ($wpRewrite) {
     $new_rules = [
-        'news/(.+?)/?$' => 'index.php?post_type=post&name=' . $wp_rewrite->preg_index(1),
+        'news/(.+?)/?$' => 'index.php?post_type=post&name=' . $wpRewrite->preg_index(1),
     ];
 
-    $wp_rewrite->rules = $new_rules + $wp_rewrite->rules;
+    $wpRewrite->rules = $new_rules + $wpRewrite->rules;
 }); 
 
-add_filter('post_link', function ($post_link, $id = 0){
+add_filter('post_link', function ($postLink, $id = 0){
     $post = get_post($id);
 
     if (is_object($post) && $post->post_type == 'post') {
         return home_url('/news/'. $post->post_name.'/');
     }
 
-    return $post_link;
+    return $postLink;
 }, 1, 3);
 
 /**
