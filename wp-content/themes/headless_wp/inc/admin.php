@@ -11,5 +11,6 @@ if (function_exists('acf_add_options_page')) {
         'redirect' 	    => false,
         'position'      => 25.2049,
         'show_in_graphql' => true,
+        'graphql_field_name' => 'siteSettings'
     ]);
 }
